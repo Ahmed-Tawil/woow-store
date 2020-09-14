@@ -1,0 +1,252 @@
+<div class="text-center mt-3" id="mainTitile">
+    <h2>طلبية رقم : <span style="color:  #FF3333;"><%= data.orderNumb %> </span></h2>
+</div>
+<hr class="mt-3">
+<div class="row mb-3" >
+    <div class="col-md-4">
+        <a class="btn btn-primary showReports"  href="/orders/action/<%= data._id %>?action=print" style="background-color: #e9c62c;;border: 0px;" role="button">
+            <i class="fas fa-print"></i>
+            <label class="d-inline-block mr-2">طباعة</label>
+        </a>   
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <table
+            class="table ffg table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="2" style="width: 10%;">بيانات المستلم</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="recivedInfoTD">الاسم</td>
+                    <td><%= data.userName %></td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">رقم الجوال</td>
+                    <td><%= data.userMobile || '-'%> </td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">العنوان</td>
+                    <td><%= data.mainUserAddress.address %></td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">العنوان التفصيلي</td>
+                    <td><%= data.secondUserAddress || '-'%></td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">طريقة الطلب</td>
+                    <td><%= data.orderWay.title %></td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">اسم السوشيل ميديا</td>
+                    <td><%= data.userSocial || '-'%></td>
+                </tr>
+
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="col-md-6 mx-auto">
+        <!---->
+        <% var days =["اﻷحد","اﻷثنين","الثلاثاء","اﻷربعاء","الخميس","الجمعة","السبت"];%>
+        <% var date = new Date(new Date(data.deleviryDate));%>
+
+        <table
+            class="overFlow table table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="5">بيانات التسليم</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="recivedInfoTD">نوع الطلب</td>
+                    <td colspan="5">
+                        <% data.orderCase.forEach(item => { %>
+                        <span class="badge badge-warning"><%= item.productClass.title  %> </span>
+                        <% }) %>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">السعر المطلوب</td>
+                    <td colspan="5"><%= data.orderPrice %> شيكل</td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">شامل التوصيل</td>
+                    <td colspan="5">
+                        <% if (data.deliveryCompany.price > 0) { %>
+                        <i class="fas fa-check-circle"></i>
+                        <% } else { %>
+                        <i class="fas fa-times-circle"></i>
+                        <% } %>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">شركة التوصيل</td>
+                    <td colspan="5"><%= data.deliveryCompany.name %></td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">موعد التسليم</td>
+                    <td style="background-color:  #ecd87d;">يوم</td>
+                    <td><%= days[date.getDay()] %></td>
+                    <td style="background-color:  #ecd87d;">التاريخ</td>
+                    <td><%= data.deleviryDate %></td>
+                </tr>
+                <tr>
+                    <td class="recivedInfoTD">ملاحظات التوصيل</td>
+                    <td colspan="5"><%= data.orderNotes.forDelivery || '-' %></td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <style>
+            .table td,
+            .table th {
+                vertical-align: middle;
+            }
+
+            .overFlow {
+                white-space: nowrap;
+            }
+        </style>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table
+            class="overFlow table table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered my-4">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">#</th>
+                    <th>الصنف</th>
+                    <th>النوع</th>
+                    <th>التفاصيل</th>
+                    <th>السعر</th>
+                    <th>تجهيز</th>
+                    <th>مساعد</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.orderCase.forEach((item , index) => { %>
+                <tr>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= item.productClass.title %></td>
+                    <td><%= item.productKind.title %></td>
+                    <td><%= item.orderDetails || '-'%></td>
+                    <td><%= item.price %></td>
+                    <td><%= item.orderPrepar.name %></td>
+                    <td><%= item.orderHelper.name %></td>
+                </tr>
+                <% }) %>
+            <tbody style="border-top: 2px solid #ecd87d ;">
+                <tr>
+                    <td style="background-color:  #ecd87d;" class="recivedInfoTD">مستقبل الطلب</td>
+                    <td colspan="6"><%= data.emplRecivedID.employeeName %></td>
+                </tr>
+                <tr>
+                    <td style="background-color:  #ecd87d;" class="recivedInfoTD">مغلف الطلب</td>
+                    <td colspan="6"><%= data.emplWraperID.employeeName %></td>
+                </tr>
+            </tbody>
+            <tbody style="border-top: 2px solid #ecd87d ;">
+
+                <tr>
+                    <td rowspan="2" style="background-color:  #ecd87d;" class="recivedInfoTD">ملاحظة للعمل</td>
+                    <td colspan="6"><%= data.orderNotes.forUser %></td>
+                </tr>
+            </tbody>
+
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modelLabel">صورة مرفقة</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img class="modelImg" src="" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+<!--emd model-->
+
+<% console.log(data.images == false); %>
+
+<% if (Object.keys(data.images).length > 0) { %>
+<hr>
+<div class="text-center mt-3" id="mainTitile">
+    <h2>الصور المرفقة</h2>
+</div>
+<hr mt-2>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="mx-auto">
+            <% data.images.forEach((img , index) => { %>
+            <li role="button" role="button" data-toggle="modal" data-target="#imgModal">
+                <img class="img border rounded m-2" src=<%= `/uploads/${data._id}/${img}` %> alt="...">
+            </li>
+            <% }) %>
+        </ul>
+    </div>
+</div>
+<% } %>
+
+<style>
+    .img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+
+    }
+
+    .modelImg {
+        width: 100%;
+
+    }
+
+    .img:hover {
+        opacity: 0.5;
+    }
+
+    ul {
+        text-decoration: none;
+        width: fit-content;
+    }
+
+    li {
+        display: inline-block;
+        cursor: pointer;
+    }
+</style>
+<script>
+    $('.img').on('click', (e) => {
+
+        const img = e.target.src
+        $('.modelImg').attr('src', img)
+
+    })
+</script>

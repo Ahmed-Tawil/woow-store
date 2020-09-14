@@ -1,0 +1,28 @@
+<div class="container">
+    <a class="btn btn-primary mt-3" href="/constants/orderWays" role="button" style="width: 100%;">
+        <i class="fas fa-clipboard-list d-inline-block"></i>
+        <label class="d-inline-block mr-2">عرض أماكن الطلب</label>
+    </a>
+
+    <hr class="mt-2">
+    <div class="text-center my-3" id="mainTitile">
+        <h2>تعديل طريقة طلب </h2>
+    </div>
+
+    <div class="alert" id="alert">
+
+    </div>
+    <form action="/constants/edit-orderWay/<%= data._id %>" method="POST" id="form1">
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">الاسم :</label>
+            <input  type="text" value="<%= data.title %>" class="form-control" placeholder="الاسم" 
+                name='orderWay' required>
+        </div>
+        <button class="btn btn-primary mb-4" role="button" style="width: 100%;" type="submit" id="1">
+            <i class="fas fa-plus d-inline-block" role="button"></i>
+            <label class="d-inline-block mr-2" role="button" for="1">تعديل المكان</label>
+        </button>
+    </form>
+
+
+</div>

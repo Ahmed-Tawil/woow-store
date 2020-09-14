@@ -1,0 +1,30 @@
+<div class="container">
+  <a class="btn btn-primary mt-5" href="/products/classess" role="button" style="width: 100%;">
+    <i class="fas fa-clipboard-list d-inline-block"></i>
+    <label class="d-inline-block mr-2">عرض الأصناف</label>
+  </a>
+
+  <div class="text-center my-3" id="mainTitile">
+    <h2>إضافة صنف جديد</h2>
+
+  </div>
+
+  <hr class="mt-2">
+
+  <div id="alert">
+
+  </div>
+
+  <form action="/products/add-class" method="POST" id="form1">
+
+    <div class="form-group">
+      <label class="col-form-label" for="inputDefault">اسم الصنف :</label>
+      <input type="text" class="form-control" placeholder="اسم الصنف" id="classNameInput" name='classNameInput'
+        required>
+    </div>
+    <button class="btn btn-primary my-4"  role="button" style="width: 100%;color: white;" type="submit" id="addProduct">
+      <i class="fas fa-plus d-inline-block" role="button" ></i>
+      <label class="d-inline-block mr-2" for="addProduct" role="button" >إضافة الصنف</label>
+    </button>
+  </form>
+</div>

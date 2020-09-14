@@ -1,0 +1,60 @@
+<div class="container">
+    <a class="btn btn-primary mt-3" href="/warehouse" role="button" style="width: 100%;">
+        <i class="fas fa-clipboard-list d-inline-block"></i>
+        <label class="d-inline-block mr-2">عرض العناصر</label>
+    </a>
+
+    <hr class="mt-2">
+    <div class="text-center my-3" id="mainTitile">
+        <h2>تعديل عنصر</h2>
+    </div>
+
+    <div class="alert" id="alert">
+
+    </div>
+    <form action="/warehouse/edit-item/<%= data._id %>" method="POST" id="form1">
+
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">اسم العنصر :</label>
+            <input type="text" value="<%= data.name %>" class="form-control" placeholder="اسم العنصر" id="itemNameInput"
+                name='itemNameInput' required>
+        </div>
+
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">الكمية :</label>
+            <div class="form-group">
+                <div class="input-group mb-2">
+
+                    <input type="number" value="<%= data.qty %>" class="form-control"  min="0"
+                        step="any" name="itemQty" required>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">وحدة</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">سعر الوحدة :</label>
+            <div class="form-group">
+                <div class="input-group mb-2">
+
+                    <input type="number" value="<%= data.unitPrice %>" class="form-control" aria-label="Amount (to the nearest dollar)" min="0"
+                        step="any" name="unitPrice" required>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">شيكل</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary mb-4" role="button" style="width: 100%;" type="submit">
+
+            <i class="fas fa-plus d-inline-block" role="button"></i>
+            <label class="d-inline-block mr-2" role="button">تعديل العنصر</label>
+        </button>
+    </form>
+
+
+</div>

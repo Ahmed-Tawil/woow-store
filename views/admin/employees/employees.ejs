@@ -1,0 +1,77 @@
+<div class="container">
+
+    <a class="btn btn-primary mt-3" href="/employees/add-employee" role="button" style="width: 100%;">
+        <i class="fas fa-plus d-inline-block"></i>
+        <label class="d-inline-block mr-2">إضافة موظف</label>
+    </a>
+
+    <hr class="mt-3">
+    <div class="text-center mb-3" id="mainTitile">
+        <h2>جميع الموظفين</h2>
+    </div>
+    <%- include('../../messages') %>
+
+    <% if (data == false) { %>
+        <h5 class="text-center mb-3" >
+            <hr mb-3>
+            لا يوجد موظفين لعرضهم!
+        </h5>
+    <% }else{ %>
+        <hr class="mt-3">
+
+        <div class="input-group md-form form-sm form-2 mb-2" >
+            <input class="form-control my-0 py-1 red-border" type="text" placeholder="بحث .." aria-label="Search" id="searchInput">
+            <div class="input-group-append">
+              <span class="input-group-text red lighten-3" id="basic-text1"><i class="fas fa-search text-grey"
+                  aria-hidden="true"></i></span>
+            </div>
+        </div>
+          
+        <table class="table table-striped table-hover table-responsive-md table-responsive-sm text-center m-0 table-bordered" id="ordersTable" >
+            <thead >
+                <tr  class="thead">
+                    <th scope="col" tyle="width:10%;">#</th>
+                    <th scope="col">اسم الموظف</th>
+                    <th scope="col" style="width:15%;">أدوات</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <% data.forEach((item , index) => { %>
+                    <tr class="">
+                        <th scope="row"><%= index+1 %></th>
+                        <td><%= item.employeeName%></td>
+
+                        
+                        <td style="padding: .75rem 0 .75rem 0;">
+                         
+                            <a href="/employees/action/<%= item._id%>?action=edit" class="mx-1">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <% if (user.role == 'admin') { %>
+                                <a href="/employees/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>    
+                            <% } %>
+                        </td>
+    
+                    </tr>
+                <% }) %>
+    
+            </tbody>
+        </table>
+    <% } %>
+
+</div>
+<link rel="stylesheet" href="/css/form.css">
+<script>
+  $(document).ready(function(){
+    $("#searchInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#ordersTable tr:not(.thead)").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+    });
+
+</script>

@@ -1,0 +1,193 @@
+<div class="container">
+
+
+    <div class="text-center my-3" id="mainTitile">
+        <h2>تقرير المبيعات</h2>
+    </div>
+    <hr class="mt-3">
+    <form action="/reports/sales" method="GET">
+        <div class="row" id="periodDate">
+            <div class="col-md-6">
+
+                <% if (Object.keys(dates).length > 0) { %>
+                <div class="form-group">
+                    <label class="col-form-label" for="deleviryDate">من :</label>
+                    <input type="date" value="<%= dates.fromDeleviryDate %>" placeholder="dd-mm-yyyy" min="2020-09-01"
+                        class="form-control" placeholder="من" id="fromDeleviryDate" name="fromDeleviryDate" required>
+                </div>
+                <% } else { %>
+                <div class="form-group">
+                    <label class="col-form-label" for="deleviryDate">من :</label>
+                    <input type="date" placeholder="dd-mm-yyyy" min="2020-09-01" class="form-control" placeholder="من"
+                        id="fromDeleviryDate" name="fromDeleviryDate" required>
+                </div>
+                <% } %>
+            </div>
+            <div class="col-md-6">
+                <% if (Object.keys(dates).length > 0) { %>
+                <div class="form-group">
+                    <label class="col-form-label" for="deleviryDate">إلى :</label>
+                    <input type="date" value="<%= dates.toDeleviryDate %>" placeholder="dd-mm-yyyy" min="2020-09-01"
+                        class="form-control" placeholder="إلى" id="toDeleviryDate" name="toDeleviryDate" required>
+                </div>
+                <% } else { %>
+                <div class="form-group">
+                    <label class="col-form-label" for="deleviryDate">إلى :</label>
+                    <input type="date" placeholder="dd-mm-yyyy" min="2020-09-01" class="form-control" placeholder="إلى"
+                        id="toDeleviryDate" name="toDeleviryDate" required>
+                </div>
+                <% } %>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary showReports" role="button" style="width: 100%;">
+                    <i class="fas fa-clipboard-list d-inline-block"></i>
+                    <label class="d-inline-block mr-2">عرض التقرير</label>
+                </button>
+            </div>
+        </div>
+
+    </form>
+    <% if (salesArr == 0 ) { %>
+    <h5 class="text-center mb-3">
+        <hr mb-3>
+        لا يوجد تقارير لعرضهم!
+    </h5>
+    <% }else{ %>
+
+    <div class="row my-3">
+        <div class="col-md-4">
+            <button class="btn btn-primary showReports" onclick="print()" style="background-color: #e9c62c;;border: 0px;" role="button">
+                <i class="fas fa-print"></i>
+                <label class="d-inline-block mr-2">طباعة</label>
+            </button>
+        </div>
+    </div>
+
+    <hr class="mt-3">
+    <div class="input-group md-form form-sm form-2 mb-2">
+        <input class="form-control my-0 py-1 red-border" type="text" placeholder="بحث .." aria-label="Search"
+            id="searchInput">
+        <div class="input-group-append">
+            <span class="input-group-text red lighten-3" id="basic-text1"><i class="fas fa-search text-grey"
+                    aria-hidden="true"></i></span>
+        </div>
+    </div>
+
+    <table
+        class="table table-striped table-hover table-responsive-md table-responsive-sm text-center m-0 mb-5 table-bordered"
+        id="print" >
+
+        <thead>
+            <tr class="thead" style="background-color: #ecd87d;">
+                <th scope="col" style="width:10%;">#</th>
+                <th scope="col">الصنف</th>
+                <th scope="col">المنتج</th>
+                <th scope="col">المباع</th>
+                <th scope="col">سعر الطلبات</th>
+                <th scope="col">تكلفة الطلبات</th>
+                <th scope="col">عمولة الموظفين</th>
+                <th scope="col">صافي الربح</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% let index = 0 %>
+            <% salesArr.forEach((element ) => { %>
+            <% element.products.forEach((element2) => { %>
+            <tr>
+                <td><%= ++index %></td>
+                <td><%= element.className %></td>
+                <td><%= element2.productName %></td>
+                <td><%= element2.productCount %></td>
+                <td><%= element2.productPriceTotal.toFixed(2) %> شيكل</td>
+                <td><%= element2.productCost.toFixed(2) %> شيكل</td>
+                <td><%= element2.productEmpTasks.toFixed(2) %> شيكل</td>
+                <td><%= (element2.productPriceTotal - element2.productCost -  element2.productEmpTasks).toFixed(2)%>
+                    شيكل</td>
+
+            </tr>
+
+            <% }) %>
+            <% }) %>
+            <tr style="background-color: #ecd87d;">
+                <td colspan="2"></td>
+                <td>المجموع</td>
+                <td><%= totals.productsCount %></td>
+                <td><%= totals.productsPriceTotal.toFixed(2) %> شيكل</td>
+                <td><%= totals.productsCost.toFixed(2) %> شيكل</td>
+                <td><%= totals.productsEmpTasks.toFixed(2) %> شيكل</td>
+                <td><%= totals.totalprofit.toFixed(2) %> شيكل</td>
+
+            </tr>
+        </tbody>
+    </table>
+    <% } %>
+
+</div>
+<link rel="stylesheet" href="/css/form.css">
+<script>
+    $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#ordersTable tr:not(.thead)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+</script>
+<script>
+    const print = () => {
+        let node = document.getElementById('print');
+        let mainTitile = document.getElementById('mainTitile');
+        let periodDate = document.getElementById('periodDate');
+
+        mainTitile.appendChild(node)
+        mainTitile.append(periodDate)
+        const scale = 3
+        const style = {
+            transform: 'scale(' + scale + ')',
+            transformOrigin: 'top left',
+            width: node.offsetWidth + "px",
+            height: node.offsetHeight + "px"
+        }
+
+        const param = {
+            height: node.offsetHeight * scale,
+            width: node.offsetWidth * scale,
+            quality: 1,
+            style
+        }
+
+
+        domtoimage.toPng(mainTitile, param)
+            .then(function (dataUrl) {
+                var img = new Image();
+                img.width = 580
+                //img.width = 529.1
+
+                //img.height = 529.1
+                img.src = dataUrl;
+                document.body.innerHTML = ''
+                // document.body.appendChild(periodDate);
+                document.body.appendChild(img);
+            })
+            .then(() => {
+                window.print()
+            }).catch(function (error) {
+                console.error('oops, something went wrong!', error);
+            })
+
+
+
+        window.onafterprint = function () {
+            window.location.href = window.location;
+
+        }
+
+    }
+</script>

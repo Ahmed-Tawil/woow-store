@@ -1,0 +1,324 @@
+
+<div class="container">
+  <!--
+  <a class="btn btn-primary mt-3" href="/orders" role="button" style="width: 100%;">
+    <i class="fas fa-clipboard-list d-inline-block"></i>
+    <label class="d-inline-block mr-2">عرض الطلبيات</label>
+  </a>
+
+  -->
+
+  <div class="text-center mt-3" id="mainTitile">
+    <h2>إضافة طلبية جديدة</h2>
+    <label for="">رقم : <%= lastOrderNumb %> </label>
+    <hr class="mt-2">
+
+  </div>
+  <div id="alert">
+
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-3 mx-auto">
+
+      <form action="/orders/add-order" method="POST" autocomplete="off" id="form1" >
+
+        <div class="form-group has-success" id="mobilePatternVerf">
+          <label class="col-form-label" for="inputDefault">رقم الجوال :</label>
+          <input type="tel" placeholder="ex: 05(9|6)xxxxxxx" class="form-control " id="inputValid" name="userMobile"
+            >
+          <div class="valid-feedback"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-form-label" for="inputDefault">اسم المستلم :</label>
+          <input type="text" class="form-control" placeholder="اسم المستلم" id="userNameInput" name='userNameInput'
+            required>
+        </div>
+        <div class="form-group">
+          <label class="col-form-label" for="inputDefault">اسم السوشيل ميديا :</label>
+          <input type="text" class="form-control" placeholder="اسم السوشيل ميديا" id="socialUserNameInput"
+            name='socialUserNameInput' >
+        </div>
+
+        <div class="form-group">
+          <label class="col-form-label" for="inputDefault">طريقة الطلب :</label>
+          <select class="custom-select" name="orderWay" id="orderWay" required>
+            <% OrderWays.forEach(element => { %>
+             <option value="<%= element._id %>"><%= element.title %></option>
+            <% }) %>
+          </select>
+        </div>
+
+
+
+
+
+    </div>
+
+    <div class="col-md-3 mx-auto ">
+      <div class="form-group">
+        <label class="col-form-label" for="inputDefault">مكان الإستلام :</label>
+        <select class="custom-select" name="deliveryCompany" id="deliveryCompany" required>
+          <% deliveryCompaniesData.forEach(item => { %>
+          <option delivryPrice="<%= item.price %>" value="<%= item._id %>"><%= item.name %></option>
+
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label" for="inputDefault">العنوان الرئيسي :</label>
+        <select class="custom-select" name="mainUserAddress" id="mainUserAddress" required>
+          <% addressesData.forEach(item => { %>
+          <option value="<%= item._id %>"><%= item.address %></option>
+
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleTextarea">العنوان التفصيلي</label>
+        <textarea class="form-control" id="secondUserAddress" name="secondUserAddress" required
+          placeholder="العنوان التفصيلي"></textarea>
+      </div>
+
+
+
+      <div class="form-group">
+        <label class="col-form-label" for="inputDefault"> خصم :</label>
+        <div class="form-group">
+          <div class="input-group mb-2">
+
+            <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" step="any"
+              name="discount" value="0" id="discount" required>
+            <div class="input-group-prepend">
+              <span class="input-group-text">شيكل</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label class="col-form-label" for="deleviryDate">موعد التسليم :</label>
+        <input type="date" placeholder="dd-mm-yyyy" min="2020-09-01" class="form-control" placeholder="تاريخ التسليم"
+          id="deleviryDate" name="deleviryDate" required>
+      </div>
+      <input type="text" name="orderCase"  id="hidden_input" hidden>
+
+      <hr class="mt-4">
+    </div>
+
+    <div class="col-md-6 mx-auto">
+
+      <div class="form-group">
+        <label class="col-form-label sel" for="inputDefault">صنف الطلب</label>
+        <select class="mdb-select md-form colorful-select dropdown-primary" searchable="Search here.."
+          id="productClass">
+          <% productClassessData.forEach(item => { %>
+          <option value="<%= item._id %>"><%= item.className %></option>
+
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group sel">
+        <label class="col-form-label" for="inputDefault">نوع الطلب</label>
+        <select id="productKind">
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleTextarea">تفاصيل الطلب</label>
+        <textarea class="form-control" id="orderDetails" rows="2" placeholder="تفاصيل الطلب"></textarea>
+      </div>
+      <div class="row mt-1">
+
+        <div class="form- col-md-6 text-center">
+          <label class="col-form-label" for="inputDefault">تجهيز</label>
+          <select class="custom-select" id="prepareId">
+            <% employeesData.forEach(item => { %>
+            <option value="<%= item._id %>"><%= item.employeeName %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="form-group col-md-6 text-center">
+          <label class="col-form-label" for="inputDefault">المساعد</label>
+          <select class="custom-select" id="helperId">
+            <% employeesData.forEach(item => { %>
+            <option value="<%= item._id %>"><%= item.employeeName %></option>
+            <% }) %>
+          </select>
+        </div>
+
+
+      </div>
+
+
+      <a class="btn btn-primary mb-3 mt-2" role="button" style="width: 100%;color: white;" id="addDetailbtn">
+        <i class="fas fa-plus d-inline-block" role="button"></i>
+        <label class="d-inline-block mr-2" role="button">إضافة تفاصيل الطلب</label>
+      </a>
+
+      <div class="form-group" id="orderTable"></div>
+      <div class="row">
+        <div class="form- col-md-6 text-center">
+          <label class="col-form-label" for="inputDefault">إستقبال</label>
+          <select class="custom-select" id="reciveId" name="emplRecivedID" required>
+            <% employeesData.forEach(item => { %>
+            <option value="<%= item._id %>"><%= item.employeeName %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form- col-md-6 text-center">
+          <label class="col-form-label" for="inputDefault">المغلف</label>
+          <select class="custom-select" id="wraperId" name="emplWraperID" required>
+            <% employeesData.forEach(item => { %>
+            <option value="<%= item._id %>"><%= item.employeeName %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group mt-2" style="margin-bottom: 10px;">
+        <label class="col-form-label" for="inputDe1fault">ملاحظات :</label>
+        <input type="text" class="form-control" placeholder="للعمل" id="forUser" name='forUserNotes' >
+      </div>
+      <div class="form-group" style="margin-top:0px ;">
+        <input type="text" class="form-control" placeholder="للتوصيل" id="forDeliveryNotes" name='forDeliveryNotes'
+          >
+      </div>
+
+      <input type="file" name="photos" multiple>
+
+
+      <button class="btn btn-primary my-3" role="button" style="width: 100%;" id="submitId" type="submit" onclick='return btnClick()'>
+        <i class="fas fa-plus d-inline-block" role="button"></i>
+        <label class="d-inline-block mr-2" role="button">إضافة الطلبية</label>
+      </button>
+    </div>
+
+  </div>
+        <!-- Modal -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modelLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="form-group">
+                <div id="alertForUpdate">
+
+                </div>
+              
+                <label for="exampleTextarea">تفاصيل الطلب</label>
+                <textarea class="form-control" id="UpdateOrderDetails" rows="2" placeholder="تفاصيل الطلب"></textarea>
+              </div>
+              <div class="row mt-1">
+                <div class="form- col-md-6 text-center">
+                  <label class="col-form-label" for="inputDefault">تجهيز</label>
+                  <select class="custom-select" id="UpdatePrepareId">
+                    <% employeesData.forEach(item => { %>
+                    <option value="<%= item._id %>"><%= item.employeeName %></option>
+                    <% }) %>
+                  </select>
+                </div>
+        
+                <div class="form-group col-md-6 text-center">
+                  <label class="col-form-label" for="inputDefault">المساعد</label>
+                  <select class="custom-select" id="UpdateHelperId">
+                    <% employeesData.forEach(item => { %>
+                    <option value="<%= item._id %>"><%= item.employeeName %></option>
+                    <% }) %>
+                  </select>
+                </div>
+              </div>
+        
+
+            </div>
+            <div class="modal-footer" style="font-family: 'Cairo', sans-serif;">
+              <button type="button" style="font-family:inherit;" class="btn btn-secondary"
+                data-dismiss="modal">إغلاق</button>
+              <button class="btn btn-primary" style="font-family:inherit;" type="button" id="updateTableBtn">تعديل</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+<!--emd model-->
+
+
+</div>
+
+<style>
+  .col-form-label {
+    padding-top: 0px !important;
+  }
+</style>
+<script>
+  const action = 'add'
+</script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script src="/js/uploads.js"></script>
+
+<script src="/js/customOrderKind.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#myInput").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $(".dropdown-menu li").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+  const input = document.getElementById('mobilePatternVerf').children
+  let inputValue;
+  input[1].addEventListener("keyup", () => {
+    inputValue = input[1].value
+    if (inputValue.length == 10 && (inputValue.indexOf('059') == 0 || inputValue.indexOf('056') == 0)) {
+      input[1].classList.remove("is-invalid");
+      input[1].classList.add("is-valid");
+      input[2].innerHTML = 'رقم الجوال صحيح'
+      $.get(`/Orders/exist-user?userMobile=${inputValue}`, function (recivedData, status) {
+        if (recivedData == false)
+          return
+        $('#userNameInput').val(recivedData.userName)
+        $('#socialUserNameInput').val(recivedData.userSocial)
+        //$('#mainUserAddress select').val()
+        $(`#orderWay option[value=${recivedData.orderWay}]`).attr('selected', 'selected');
+        $(`#deliveryCompany option[value=${recivedData.deliveryCompany}]`).attr('selected', 'selected');
+        $(`#mainUserAddress option[value=${recivedData.mainUserAddress}]`).attr('selected', 'selected');
+        $('#secondUserAddress').val(recivedData.secondUserAddress);
+
+
+      })
+
+
+    } else {
+      input[1].classList.remove("is-valid");
+      input[1].classList.add("is-invalid");
+      input[2].innerHTML = 'رقم الجوال خاطئ'
+
+    }
+  });
+/*
+  $('#orderWay').change(function() {
+        //remove the select attr from the option that currently has a value of selected
+        $(this).find("option[selected='true']").removeAttr('selected');
+        //add the selected attr with value of true to the option that was clicked on
+        $(this).find('option:selected').attr('selected', 'true');
+        //submit the form
+    });
+
+*/
+</script>

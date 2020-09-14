@@ -1,0 +1,45 @@
+<div class="container">
+    <a class="btn btn-primary mt-3" href="/constants/delivery-companies" role="button" style="width: 100%;">
+        <i class="fas fa-clipboard-list d-inline-block"></i>
+        <label class="d-inline-block mr-2">عرض شركات التوصيل</label>
+    </a>
+
+    <hr class="mt-2">
+    <div class="text-center my-3" id="mainTitile">
+        <h2>تعديل شركة التوصيل</h2>
+    </div>
+
+    <div class="alert" id="alert">
+
+    </div>
+    <form action="/constants/edit-delivery-company/<%= data._id %>" method="POST" id="form1">
+
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">اسم الشركة :</label>
+            <input type="text" value="<%= data.name %>" class="form-control" placeholder="اسم الشركة" id="companyNameInput"
+                name='companyNameInput' required>
+        </div>
+
+        <div class="form-group">
+            <label class="col-form-label" for="inputDefault">سعر الخدمة :</label>
+            <div class="form-group">
+                <div class="input-group mb-2">
+
+                    <input type="number"  value="<%= data.price %>" class="form-control" aria-label="Amount (to the nearest dollar)" min="0"
+                        step="any" name="deliveryTask" required>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">شيكل</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary mb-4" role="button" style="width: 100%;" type="submit" id="1">
+
+            <i class="fas fa-plus d-inline-block" role="button"></i>
+            <label class="d-inline-block mr-2" role="button" for="1">تعديل الشركة</label>
+        </button>
+    </form>
+
+
+</div>

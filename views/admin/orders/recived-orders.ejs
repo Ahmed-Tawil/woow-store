@@ -1,0 +1,162 @@
+<hr class="mt-3">
+<div class="text-center mb-3" id="mainTitile">
+    <h2>طلبات مستلمة</h2>
+</div>
+
+<%- include('../../messages') %>
+
+<% if (data == false) { %>
+<h5 class="text-center mb-3">
+    <hr mb-3>
+    لا يوجد طلبيات لعرضها!
+</h5>
+<% }else{ %>
+<hr class="mt-3">
+
+<div class="input-group md-form form-sm form-2 mb-2">
+    <input class="form-control my-0 py-1 red-border" type="text" placeholder="بحث .." aria-label="Search"
+        id="searchInput">
+    <div class="input-group-append">
+        <span class="input-group-text red lighten-3" id="basic-text1"><i class="fas fa-search text-grey"
+                aria-hidden="true"></i></span>
+    </div>
+</div>
+
+
+<div class="mt-3"></div>
+<form action="/orders/recived-orders" method="POST">
+    <table
+        class="ordersTable table table-striped table-hover table-responsive-md table-responsive-sm text-center m-0 table-bordered mb-2"
+        id="ordersTable">
+        <thead>
+            <tr class="thead">
+                <th scope="col" class="index">#</th>
+                <th scope="col">الاسم</th>
+                <th scope="col">المعرف</th>
+                <th scope="col">اسم السوشيل</th>
+                <th scope="col">طريقه الطلب</th>
+
+                <th scope="col">السعر</th>
+                <th scope="col">يوم التسليم</th>
+                <th role="button" scope="col"> <a href="/orders/recived-orders?order=date"
+                        style="text-decoration: none; color: black;">موعد التسليم</a></th>
+                <th scope="col" style="width:15%;">أدوات</th>
+                <th scope="col">
+                    <input class="checkAll" id="checkAll" type="checkbox" name="selectAll" value="true"
+                        style="cursor: pointer;">
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <% const days =["اﻷحد","اﻷثنين","الثلاثاء","اﻷربعاء","الخميس","الجمعة","السبت"];%>
+
+            <% data.forEach((item , index) => { %>
+            <tr class="">
+                <th scope="row"><%= index+1 %></th>
+                <td><%= item.userName%></td>
+                <td><%= item.orderNumb %></td>
+                <td><%= item.userSocial %></td>
+                <td><%= item.orderWay.title %></td>
+
+                <td><%= item.orderPrice %> شيكل</td>
+                <% const date = new Date(new Date(item.deleviryDate));%>
+                <td><%= days[date.getDay()] %></td>
+                <td><%= item.deleviryDate %></td>
+                <td style="padding: .75rem 0 .75rem 0;">
+                    <a href="/orders/action/<%= item._id%>?action=display" class="mx-1">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <% if (item.printed) { %>
+                    <a href="/orders/action/<%= item._id%>?action=print" style="color: green;" class="mx-1">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <% }else{ %>
+                    <a href="/orders/action/<%= item._id%>?action=print" class="mx-1">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <% } %>
+                    <% if (user.role != 'emp') { %>
+                    <a href="/orders/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                    <% } %>
+
+
+                </td>
+
+                </td>
+                <td role="checkbox">
+                    <input class="checkbox" type="checkbox" name="movingItems" value="<%= item._id %>"
+                        style="cursor: pointer;" onchange="countCheckedBox()">
+                </td>
+
+
+            </tr>
+            <% }) %>
+            <tr style="width: 100%;">
+                <td colspan="10" id="selectedNumber" style="padding: 3px;">
+                    <label style="padding: 3px;"></label>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <div class="text-center">
+        <label class="col-form-label" for="inputDefault">نقل إلى</label>
+        <select class="custom-select sel" id="movingStage" name="movingStage">
+            <option value="pending">قيد التنفيذ</option>
+            <option value="ready">جاهز</option>
+            <option value="sent">مرسل</option>
+            <option selected value="archived">الأرشيف</option>
+
+        </select>
+    </div>
+
+    <button class="btn btn-primary my-3" role="button" style="width: 100%;" type="submit" id="movingBtn">
+        <i class="fas fa-people-carry d-inline-block" role="button"></i>
+        <label class="d-inline-block mr-2" role="button">نقل العناصر</label>
+    </button>
+
+</form>
+<% } %>
+
+<link rel="stylesheet" href="/css/form.css">
+<script>
+    $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#ordersTable tr:not(.thead)").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    const checkboxes = document.querySelectorAll('.checkbox')
+    const checkAllbtn = document.getElementById('checkAll')
+    const movingBtn = document.getElementById('movingBtn')
+    const movingStage = document.getElementById('movingStage')
+    const selectedNumber = document.getElementById('selectedNumber')
+
+    const countCheckedBox = () => {
+        const checkboxes = document.querySelectorAll('.checkbox:checked')
+        selectedNumber.innerText = `تم تحديد ${checkboxes.length} عنصر.`
+
+    }
+    checkAllbtn.addEventListener('change', function () {
+        if (this.checked) {
+            selectedNumber.innerText = `تم تحديد ${checkboxes.length} عنصر.`
+            for (i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = true;
+            }
+        } else {
+            selectedNumber.innerText = ``
+
+            for (i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = false;
+            }
+        }
+    });
+
+
+</script>

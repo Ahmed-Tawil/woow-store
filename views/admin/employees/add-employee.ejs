@@ -1,0 +1,30 @@
+<div class="container">
+  <a class="btn btn-primary mt-5" href="/employees" role="button" style="width: 100%;">
+    <i class="fas fa-clipboard-list d-inline-block"></i>
+    <label class="d-inline-block mr-2">عرض الموظفين</label>
+  </a>
+
+  <div class="text-center my-3" id="mainTitile">
+    <h2>إضافة موظف جديد</h2>
+
+  </div>
+
+  <hr class="mt-2">
+
+  <div id="alert">
+    
+  </div>
+
+      <form action="/employees/add-employee" method="POST" id="form1">
+
+        <div class="form-group">
+          <label class="col-form-label" for="inputDefault">اسم الموظف :</label>
+          <input  type="text" class="form-control" placeholder="اسم الموظف" id="classNameInput" name='employeeNameInput' required>
+        </div>
+        <button class="btn btn-primary my-4"  role="button" style="width: 100%;" type="submit" >
+                  
+                    <i class="fas fa-plus d-inline-block" role="button"></i>
+                    <label class="d-inline-block mr-2" role="button">إضافة الموظف</label>
+        </button>
+</form>
+</div>    

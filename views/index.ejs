@@ -1,0 +1,60 @@
+<a class="btn btn-primary mt-3" href="/orders/add-order" role="button" style="width: 100%;">
+    <i class="fas fa-plus d-inline-block"></i>
+    <label class="d-inline-block mr-2">إضافة طلبية</label>
+</a>
+
+<hr>
+<h1 class="m-5 text-center">ملخص الطلبات</h1>
+<div class="mt-2 mb-4" style="text-align: center; align-items: center;">
+
+    <div class="row" style="vertical-align: middle;">
+
+        <a href="/orders/pending-orders" class="mx-auto" role="button" style="text-decoration: none;max-width: 30rem;">
+            <div class="card text-white  bg-secondary" >
+                <div class="card-header">
+                    <i class="d-inline-block fas fa-cogs "></i>
+                    <h3 class="d-inline-block mr-3">قيد التنفيذ</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title display-1"><%= objCount.pending %></h4>
+                </div>
+            </div>
+        </a>
+
+        <a href="/orders/ready-orders" class="mx-auto" role="button" style="text-decoration: none;max-width: 30rem;">
+            <div class="card text-white bg-warning  mx-auto" role="button">
+                <div class="card-header">
+                    <i class="d-inline-block fas fa-calendar "></i>
+                    <h3 class="d-inline-block mr-3">جاهز</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title display-1"><%= objCount.ready %></h4>
+                </div>
+            </div>
+        </a>
+        
+        <a href="/orders/sent-orders" class="mx-auto" role="button"  style="text-decoration: none;max-width: 30rem;">
+            <div class="card text-white bg-primary" role="button" >
+                <div class="card-header">
+                    <i class="d-inline-block fas fa-comment "></i>
+                    <h3 class="d-inline-block mr-3">مرسل</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title display-1"><%= objCount.sent %></h4>
+                </div>
+            </div>
+        </a>
+
+        <a href="/orders/recived-orders"  class="mx-auto" role="button" style="text-decoration: none;max-width: 30rem;">
+            <div class="card text-white bg-success mx-auto" role="button" >
+                <div class="card-header">
+                    <i class="fas fa-check-circle d-inline-block"></i>
+                    <h3 class="d-inline-block mr-3">مستلم</h1>
+                </div>
+                <div class="card-body">
+                    <h4 class="card- display-1"><%= objCount.recived %></h4>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

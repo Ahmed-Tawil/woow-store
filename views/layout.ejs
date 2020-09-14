@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+
+    <link rel="stylesheet" href="/css/loadingAniation.css">
+  -->
+
+
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="/js/dom-to-image.js"></script>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.bootstrap3.min.css" />
+  <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+  <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+  <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet"
+    type="text/html">
+
+  <link rel="icon" href="/img/favicon.png" type="image/png">
+
+  <link rel="stylesheet" href="/css/main.css">
+
+  <title>متجر واو للهدايا</title>
+</head>
+
+<body style="direction: rtl;">
+  <% var days =["اﻷحد","اﻷثنين","الثلاثاء","اﻷربعاء","الخميس","الجمعة","السبت"];%>
+
+  <div class="loader-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="/"><img src="/img/woow-logo.png" style="width: 80px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto ml-3">
+        <li class="nav-item <%= path === '/' ? 'active' : '' %>">
+          <a class="nav-link" href="/">الرئيسية <span class="sr-only">(current)</span></a>
+        </li>
+
+        <li class="nav-item dropdown <%= path === '/orders' ? 'active' : '' %>">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">الطلبيات</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/orders/add-order">إضافة طلبية</a>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item" href="/orders">جميع الطلبيات</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/orders/pending-orders">قيد التنفيذ</a>
+            <a class="dropdown-item" href="/orders/ready-orders">جاهز</a>
+            <a class="dropdown-item" href="/orders/sent-orders">مرسل</a>
+            <a class="dropdown-item" href="/orders/recived-orders">مستلم</a>
+
+          </div>
+        </li>
+
+
+        <li class="nav-item dropdown <%= path === '/products' ? 'active' : '' %>">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">المنتجات</a>
+          <div class="dropdown-menu">
+            <% if (user.role == 'admin') { %>
+            <a class="dropdown-item" href="/products/add-product">إضافة منتج</a>
+            <% } %>
+            <a class="dropdown-item" href="/products">عرض المنتجات</a>
+            <div class="dropdown-divider"></div>
+            <% if (user.role !== 'emp') { %>
+            <a class="dropdown-item" href="/products/add-class">إضافه صنف</a>
+            <% } %>
+            <a class="dropdown-item" href="/products/classess">عرض الأصناف</a>
+          </div>
+        </li>
+
+        <% if (user.role !== 'emp') { %>
+        <li class="nav-item <%= path === '/employees' ? 'active' : '' %>">
+          <a class="nav-link" href="/employees">الموظفين<span class="sr-only">(current)</span></a>
+        </li>
+        <% } %>
+
+        <% if (user.role !== 'emp') { %>
+        <li class="nav-item <%= path === '/warehouse' ? 'active' : '' %>">
+          <a class="nav-link" href="/warehouse">المستودع<span class="sr-only">(current)</span></a>
+        </li>
+        <% } %>
+
+        <% if (user.role !== 'emp') { %>
+        <li class="nav-item dropdown <%= path === '/constants' ? 'active' : '' %>">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">الثوابت</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/constants/employees-tasks">عمولات الموظفين</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/constants/delivery-companies">شركات التوصيل</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/constants/addresses">العناوين الرئيسية</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/constants/orderWays">طريقة الطلب</a>
+
+          </div>
+        </li>
+        <% } %>
+
+
+
+        <% if (user.role == 'admin') { %>
+        <li class="nav-item dropdown <%= path === '/reports' ? 'active' : '' %>">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+            aria-expanded="false">التقارير</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/reports/employees">تقارير الموظفين</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/reports/sales">تقارير المبيعات</a>
+          </div>
+        </li>
+
+        <% } %>
+
+      </ul>
+      <ul style="padding: 0px;" class="navbar-nav ml-4">
+        <li class="nav-item" style="padding: 0px;color: white;">
+          <a class="nav-link list-unstyled" href="/user/logout"><i class="fas fa-sign-out-alt"></i><span
+              class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <style>
+    .list-unstyled {
+      margin: 0px;
+      padding: 8px;
+    }
+  </style>
+  <script>
+    /*
+    $(window).on("load", function () {
+      $(".loader-wrapper").fadeOut("slow");
+    });
+    */
+  </script>
+
+
+  <div class="container">
+    <%- body %>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">تأكيد عملية الحذف!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer" style="font-family: 'Cairo', sans-serif; color: white;">
+          <a type="button" style="font-family:inherit;" class="btn btn-secondary" data-dismiss="modal">إغلاق</a>
+          <a class="btn btn-primary" style="font-family:inherit;" id="deleteBtn"  role="button">حذف</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <footer id="sticky-footer" class="mt-4  text-black-50 display-5">
+    <div class="container text-center">
+      <small>Copyright &copy; Woow-Store</small>
+    </div>
+  </footer>
+  <style>
+    .index {
+      width: 5%;
+    }
+  </style>
+
+</body>
+<script>
+//confirmDeletion
+  $('a.confirmDeletion').on('click', function (e) {
+    $('#confirmDeleteModal').modal('toggle');
+    const href = e.currentTarget.href
+    $('#deleteBtn').attr('href', href)
+    //console.log(href);
+    return false;
+  });
+
+  $('#deleteBtn').on('click', () => {
+    $('#confirmDeleteModal').modal('toggle');
+    return true
+  })
+
+</script>
+
+</html>

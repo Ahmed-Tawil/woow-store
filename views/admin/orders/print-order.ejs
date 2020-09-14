@@ -1,0 +1,213 @@
+<div id="print" >
+
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="text-center mb-3" style="margin-top:30px ;" id="mainTitile">
+                <h1 style="font-weight: 550; font-size:50px;">بطاقة تسليم طلبية</h1>
+            </div>
+            <div class="text-center mt-3" id="mainTitile">
+                <h4 style="color: #FF3333;">No.<%= data.orderNumb %></h4>
+            </div>
+
+            <table style="vertical-align: bottom ;margin-top: 25px;"
+                class="table table1 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="width: 10%;">بيانات المستلم</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="bld">الاسم</td>
+                        <td class="bld"><%= data.userName %></td>
+                    </tr>
+                    <tr>
+                        <td class="bld">رقم الجوال</td>
+                        <td class="bld"><%= data.userMobile || '-' %></td>
+                    </tr>
+                    <tr>
+                        <td class="bld">العنوان</td>
+                        <td class="bld"><%= data.mainUserAddress.address %></td>
+                    </tr>
+                    <tr>
+                        <td class="bld">العنوان التفصيلي</td>
+                        <td class="bld"><%= data.secondUserAddress  || '-'%></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!---->
+        <% var days =["اﻷحد","اﻷثنين","الثلاثاء","اﻷربعاء","الخميس","الجمعة","السبت"];%>
+
+        <div class="col-md-6">
+
+            <table
+                class="overFlow table table2 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 100%;" colspan="5">بيانات التسليم</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="bld">نوع الطلب</td>
+                        <td colspan="5">
+                            <% data.orderCase.forEach(item => { %>
+                            <span   class="badge badge-warning bld"><%= item.productClass.title %></span>
+                            <% }) %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bld">السعر المطلوب</td>
+                        <td class="bld" colspan="5"><%= data.orderPrice %> شيكل</td>
+                    </tr>
+                    <tr>
+                        <td  class="bld">شامل التوصيل</td>
+                        <td class="bld" colspan="5">
+                            <% if (data.deliveryCompany.price > 0) { %>
+                                <%= 'شامل' %> 
+                            <% } else { %>
+                                <%= 'غير شامل' %> 
+                            <% } %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bld">شركة التوصيل</td>
+                        <td colspan="5"><%= data.deliveryCompany.name %></td>
+                    </tr>
+                    <% const date = new Date(new Date(data.deleviryDate));%>
+                    <tr>
+                        <td class="recivedInfoTD">موعد التسليم</td>
+                        <td style="background-color:  #ecd87d;">يوم</td>
+                        <td><%= days[date.getDay()] %></td>
+                        <td style="background-color:  #ecd87d;">التاريخ</td>
+                        <td><%= data.deleviryDate %></td>
+                    </tr>
+                    <tr>
+                        <td  class="bld">ملاحظات التوصيل</td>
+                        <td class="bld" colspan="5"><%= data.orderNotes.forDelivery  || '-'%></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <style>
+                .table td,
+                .table th {
+                    vertical-align: middle;
+                }
+
+                .overFlow {
+                    white-space: nowrap;
+                }
+                .bld{
+                    font-weight: bold;
+                }
+                td{
+                    font-weight: bold;
+
+                }
+            </style>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <table
+                class="overFlow table table3 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered my-4">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">#</th>
+                        <th>الصنف</th>
+                        <th>النوع</th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.orderCase.forEach((item , index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= item.productClass.title %></td>
+                        <td><%= item.productKind.title %></td>
+                        <td><%= item.orderDetails  || '-'%></td>
+                    </tr>
+                    <% }) %>
+
+                <tbody style="border-top: 2px solid #ecd87d ;">
+
+                    <tr>
+                        <td rowspan="2" style="background-color:  #ecd87d;" class="recivedInfoTD">ملاحظة للعمل
+                        </td>
+                        <td colspan="6"><%= data.orderNotes.forUser || '-' %></td>
+                    </tr>
+                </tbody>
+
+
+                </tbody>
+            </table>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+<style>
+    td{
+        height: 80px !important;
+    }
+    .table1{
+        width: 530px;
+    }
+</style>
+
+<script>
+
+    const node = document.getElementById('print');
+
+    const scale = 3
+    const style = {
+        transform: 'scale(' + scale + ')',
+        transformOrigin: 'top left',
+        width: node.offsetWidth + "px",
+        height: node.offsetHeight + "px"
+    }
+
+    const param = {
+        height: node.offsetHeight * scale,
+        width: node.offsetWidth * scale,
+        quality: 1,
+        style
+    }
+
+
+    domtoimage.toPng(node, param)
+        .then(function (dataUrl) {
+            var img = new Image();
+           img.width = 400
+            //img.width = 529.1
+
+            //img.height = 529.1
+            img.src = dataUrl;
+            document.body.innerHTML = ''
+            document.body.appendChild(img);
+        })
+        .catch(function (error) {
+            console.error('oops, something went wrong!', error);
+        }).then(()=>{
+            window.print()
+        })
+
+
+
+    window.onafterprint = function () {
+        window.location.href = "/orders";
+
+    }
+
+</script>
