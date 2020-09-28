@@ -17,7 +17,6 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
 //
 app.use(express.static('public'))
 //ejs
-app.use('/scripts', express.static(__dirname + '/node_modules/file-upload-with-preview/dist/'));
 
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
@@ -49,11 +48,9 @@ app.use((req, res, next) => {
   res.locals.error_msg = req.flash('error_msg')
   res.locals.error = req.flash('error')
   //delete
-  /*
   req.session.user = {}
   req.app.locals.user = req.session.user
   req.session.user.role = 'admin'
- */
   //delete
   next();
 })
@@ -61,7 +58,7 @@ app.locals.images = []
 app.locals.path = ''
 //routes
 app.use('/user', require('./routes/loginPage'))
-app.use(auth)
+//app.use(auth)
 app.use('/', require('./routes/index'))
 app.use('/orders', require('./routes/orders'))
 app.use('/products', require('./routes/products'))

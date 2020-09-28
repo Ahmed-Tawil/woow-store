@@ -19,8 +19,6 @@ router.get('/login', homeRedirect, async (req, res) => {
 router.get('/logout', async (req, res) => {
   req.session.destroy()
   res.clearCookie(req.sessionID);
-
-
   res.redirect('/user/login')
 });
 
@@ -30,7 +28,7 @@ router.post('/login', homeRedirect, async (req, res) => {
   const user = await Users.findOne({ email: email, password: password })
   if (user !== null) {
     req.session.user = user
-    req.app.locals.user = req.session.user
+    //console.log( req.app.locals.user);
     res.redirect('/')
   } else {
     req.flash('error_msg', 'البيانات غير متطابقة لدينا!')

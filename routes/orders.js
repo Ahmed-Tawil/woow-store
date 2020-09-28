@@ -23,7 +23,7 @@ router.get('/action/:id', cors(), async (req, res) => {
             if(order.orderStatus == 'recived'){
                 await Orders.findByIdAndDelete(Orderid)
                 req.flash('success_msg', 'تم الحذف بنجاح.')
-                return res.redirect('/orders')
+                return res.redirect('/')
             }
             if (!order) {return res.redirect('back') }
             const productIds = order.orderCase.map(item => item.productKind.id)
@@ -40,7 +40,7 @@ router.get('/action/:id', cors(), async (req, res) => {
                     await Orders.findByIdAndDelete(Orderid)
                     fs.rmdir(`public/uploads/${Orderid}`, { recursive: true });
                     req.flash('success_msg', 'تم الحذف بنجاح.')
-                    res.redirect('/orders')
+                    res.redirect('/')
                 }
             });
 
@@ -77,13 +77,14 @@ router.get('/action/:id', cors(), async (req, res) => {
 
             break
         case 'print':
+            const location = req.query.location
             const dataPrint = await Orders.findById(Orderid).populate({ path: 'emplRecivedID emplWraperID', model: 'employees' })
                 .populate({ path: 'mainUserAddress', model: 'addresses' }).populate({ path: 'deliveryCompany', model: 'deliveryCompanies' })
                 
             await Orders.updateOne({_id:dataPrint} , {printed:true})    
                 
             //res.json(dataDisplay)
-            res.render('admin/orders/print-order', { data: dataPrint , path:'/orders'})
+            res.render('admin/orders/print-order', { data: dataPrint , location, path:'/orders'})
 
             break
 
@@ -164,11 +165,11 @@ router.get('/pending-orders', (req, res) => {
 });
 router.get('/ready-orders', (req, res) => {
     if (req.query.order == 'date') {
-        Orders.find({ orderStatus: 'ready' }).populate({path:'orderWay' , model:'OrderWays'}).sort({ deleviryDate: 1 }).then(data => {
+        Orders.find({ orderStatus: 'ready' }).populate({path:'orderWay' , model:'OrderWays'}).populate({path:'deliveryCompany' , model:'deliveryCompanies'}).sort({ deleviryDate: 1 }).then(data => {
             res.render('admin/orders/ready-orders', { data , path:'/orders'})
         })
     } else {
-        Orders.find({ orderStatus: 'ready' }).populate({path:'orderWay' , model:'OrderWays'}).then(data => {
+        Orders.find({ orderStatus: 'ready' }).populate({path:'orderWay' , model:'OrderWays'}).populate({path:'deliveryCompany' , model:'deliveryCompanies'}).then(data => {
             res.render('admin/orders/ready-orders', { data , path:'/orders'})
         })
     }
@@ -185,15 +186,22 @@ router.get('/sent-orders', (req, res) => {
     }
 });
 
-router.get('/recived-orders', (req, res) => {
-    if (req.query.order == 'date') {
-        Orders.find({ orderStatus: 'recived' }).populate({path:'orderWay' , model:'OrderWays'}).sort({ deleviryDate: 1 }).then(data => {
-            res.render('admin/orders/recived-orders', { data , path:'/orders'})
-        })
-    } else {
-        Orders.find({ orderStatus: 'recived' }).populate({path:'orderWay' , model:'OrderWays'}).then(data => {
-            res.render('admin/orders/recived-orders', { data , path:'/orders'})
-        })
+router.get('/recived-orders', async(req, res) => {
+    const page = req.query.page || 0
+    if(page >= 0){
+        const limit = 20
+        const documentsCount = await Orders.countDocuments({orderStatus:'recived'})
+        console.log(documentsCount);
+
+        if (req.query.order == 'date') {
+            Orders.find({ orderStatus: 'recived' }).populate({path:'orderWay' , model:'OrderWays'}).sort({ deleviryDate: 1 }).limit(limit).skip(page*limit).then(data => {
+                res.render('admin/orders/recived-orders', { data , limit , documentsCount , page , path:'/orders'})
+            })
+        } else {
+            Orders.find({ orderStatus: 'recived' }).populate({path:'orderWay' , model:'OrderWays'}).limit(limit).skip(page*limit).then(data => {
+                res.render('admin/orders/recived-orders', { data , limit , documentsCount , page , path:'/orders'})
+            })
+        }
     }
 });
 
@@ -274,9 +282,8 @@ router.post('/add-order', async (req, res) => {
             item.consumptionElements.map((item2) => {
                 const id = item2.id;
                 const qty = item2.qty
-                Items.updateOne({ _id: id }, { $inc: { "qty": -qty } }).then((err) => {
-                    if (err)
-                        console.log(err); //handel err
+                Items.updateOne({ _id: id }, { $inc: { "qty": -qty } }).then(() => {
+                 
                 })
             })
 
@@ -289,7 +296,7 @@ router.post('/add-order', async (req, res) => {
                 fs.rmdir('public/uploads/imgs', { recursive: true });
                 req.app.locals.images = []
                 req.flash('success_msg', 'تم إضافة الطلب بنجاح!')
-                res.redirect('/orders')
+                res.redirect('/')
             }
         });
     })
@@ -343,6 +350,7 @@ router.post('/edit-order/:id', async (req, res) => {
         deleviryDate: deleviryDate,
         orderCase: orderCase,
         orderNotes: orderNotes,
+        printed:false,
         emplRecivedID: emplRecivedID,
         emplWraperID: emplWraperID,
         images: images,
@@ -359,10 +367,8 @@ router.post('/edit-order/:id', async (req, res) => {
         return res.redirect('/orders')
     }
 
-    Orders.updateOne({ _id: id }, { $set: order }).then(async (err) => {
-        if (err) {
-            console.log(err);
-        } //handel err
+    Orders.updateOne({ _id: id }, { $set: order }).then(async () => {
+     
 
         //back all items to warehouse to update the new
         const oldProductIds = orderCasebfrUpdate.map(item => item.productKind.id)
@@ -371,9 +377,8 @@ router.post('/edit-order/:id', async (req, res) => {
             item.consumptionElements.map((item2) => {
                 const id = item2.id;
                 const qty = item2.qty
-                Items.updateOne({ _id: id }, { $inc: { "qty": qty } }).then((err) => {
-                    if (err)
-                        console.log(err); //handel err
+                Items.updateOne({ _id: id }, { $inc: { "qty": qty } }).then(() => {
+                  
                 })
             })
         });
@@ -385,9 +390,8 @@ router.post('/edit-order/:id', async (req, res) => {
             item.consumptionElements.map((item2) => {
                 const id = item2.id;
                 const qty = item2.qty
-                Items.updateOne({ _id: id }, { $inc: { "qty": -qty } }).then((err) => {
-                    if (err)
-                        console.log(err); //handel err
+                Items.updateOne({ _id: id }, { $inc: { "qty": -qty } }).then(() => {
+                   
                 })
             })
 
@@ -400,7 +404,7 @@ router.post('/edit-order/:id', async (req, res) => {
                 fs.rmdir('public/uploads/imgs', { recursive: true });
                 req.app.locals.images = []
                 req.flash('success_msg', 'تم تعديل الطلب بنجاح!')
-                res.redirect('/orders')
+                res.redirect('/orders/pending-orders')
             }
         });
     })
@@ -410,12 +414,13 @@ router.post('/edit-order/:id', async (req, res) => {
 
 router.post('/pending-orders', (req, res) => {
     const { movingItems, movingStage } = req.body
+    
     if (!movingItems) {
-        //show errorr
+        req.flash('error_msg', 'قم بتحديد عناصر لنقلها!')
+       return res.redirect('/orders/pending-orders')
     }
     Orders.updateMany({ _id: { $in: movingItems } }, { orderStatus: movingStage }).then((data) => {
-        req.flash('success_msg', 'تم النقل بنجاح.')
-        res.redirect('/orders/pending-orders')
+      
     })
 
 
@@ -423,7 +428,8 @@ router.post('/pending-orders', (req, res) => {
 router.post('/ready-orders', (req, res) => {
     const { movingItems, movingStage } = req.body
     if (!movingItems) {
-        //show errorr
+        req.flash('error_msg', 'قم بتحديد عناصر لنقلها!')
+       return res.redirect('/orders/ready-orders')
     }
     Orders.updateMany({ _id: { $in: movingItems } }, { orderStatus: movingStage }).then((data) => {
         //console.log(data);
@@ -438,7 +444,8 @@ router.post('/ready-orders', (req, res) => {
 router.post('/sent-orders', (req, res) => {
     const { movingItems, movingStage } = req.body
     if (!movingItems) {
-        //show errorr
+        req.flash('error_msg', 'قم بتحديد عناصر لنقلها!')
+       return res.redirect('/orders/sent-orders')
     }
     Orders.updateMany({ _id: { $in: movingItems } }, { orderStatus: movingStage }).then((data) => {
         req.flash('success_msg', 'تم النقل بنجاح.')
@@ -451,7 +458,8 @@ router.post('/sent-orders', (req, res) => {
 router.post('/recived-orders', (req, res) => {
     const { movingItems, movingStage } = req.body
     if (!movingItems) {
-        //show errorr
+        req.flash('error_msg', 'قم بتحديد عناصر لنقلها!')
+       return res.redirect('/orders/recived-orders')
     }
     Orders.updateMany({ _id: { $in: movingItems } }, { orderStatus: movingStage }).then((data) => {
         req.flash('success_msg', 'تم النقل بنجاح.')
@@ -461,8 +469,6 @@ router.post('/recived-orders', (req, res) => {
 
 });
 
-router.get('/recived', async (req, res) => {
-});
 
 
 

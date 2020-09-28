@@ -1,4 +1,4 @@
-<div id="print" >
+<div id="print">
 
     <div class="row mt-5">
         <div class="col-md-6">
@@ -8,7 +8,7 @@
             <div class="text-center mt-3" id="mainTitile">
                 <h4 style="color: #FF3333;">No.<%= data.orderNumb %></h4>
             </div>
-
+            <input type="text" id="location" value="<%= location %>" hidden>
             <table style="vertical-align: bottom ;margin-top: 25px;"
                 class="table table1 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered">
                 <thead>
@@ -43,7 +43,7 @@
         <div class="col-md-6">
 
             <table
-                class="overFlow table table2 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered">
+                class=" table table2 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered">
                 <thead>
                     <tr>
                         <th style="width: 100%;" colspan="5">بيانات التسليم</th>
@@ -54,7 +54,7 @@
                         <td class="bld">نوع الطلب</td>
                         <td colspan="5">
                             <% data.orderCase.forEach(item => { %>
-                            <span   class="badge badge-warning bld"><%= item.productClass.title %></span>
+                            <span class="badge badge-warning bld"><%= item.productClass.title %></span>
                             <% }) %>
                         </td>
                     </tr>
@@ -63,12 +63,12 @@
                         <td class="bld" colspan="5"><%= data.orderPrice %> شيكل</td>
                     </tr>
                     <tr>
-                        <td  class="bld">شامل التوصيل</td>
+                        <td class="bld">شامل التوصيل</td>
                         <td class="bld" colspan="5">
                             <% if (data.deliveryCompany.price > 0) { %>
-                                <%= 'شامل' %> 
+                            <%= 'شامل' %>
                             <% } else { %>
-                                <%= 'غير شامل' %> 
+                            <%= 'غير شامل' %>
                             <% } %>
                         </td>
                     </tr>
@@ -85,7 +85,7 @@
                         <td><%= data.deleviryDate %></td>
                     </tr>
                     <tr>
-                        <td  class="bld">ملاحظات التوصيل</td>
+                        <td class="bld">ملاحظات التوصيل</td>
                         <td class="bld" colspan="5"><%= data.orderNotes.forDelivery  || '-'%></td>
                     </tr>
 
@@ -101,10 +101,12 @@
                 .overFlow {
                     white-space: nowrap;
                 }
-                .bld{
+
+                .bld {
                     font-weight: bold;
                 }
-                td{
+
+                td {
                     font-weight: bold;
 
                 }
@@ -118,7 +120,7 @@
         <div class="col-md-12">
 
             <table
-                class="overFlow table table3 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered my-4">
+                class="table table3 table-striped table-hover table-responsive-md table-responsive-sm text-center table-bordered my-4">
                 <thead>
                     <tr>
                         <th style="width: 15%;">#</th>
@@ -158,17 +160,19 @@
 
 </div>
 <style>
-    td{
+    td {
         height: 80px !important;
     }
-    .table1{
+
+    .table1 {
         width: 530px;
     }
 </style>
 
 <script>
 
-    const node = document.getElementById('print');
+    const node = document.getElementById('print')
+    const routelocation = $('#location').val()
 
     const scale = 3
     const style = {
@@ -189,7 +193,7 @@
     domtoimage.toPng(node, param)
         .then(function (dataUrl) {
             var img = new Image();
-           img.width = 400
+            img.width = 400
             //img.width = 529.1
 
             //img.height = 529.1
@@ -199,14 +203,14 @@
         })
         .catch(function (error) {
             console.error('oops, something went wrong!', error);
-        }).then(()=>{
+        }).then(() => {
             window.print()
         })
 
 
 
     window.onafterprint = function () {
-        window.location.href = "/orders";
+        window.location.href = `/orders/${routelocation}`;
 
     }
 

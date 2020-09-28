@@ -66,11 +66,11 @@
                         <i class="fas fa-eye"></i>
                     </a>
                     <% if (item.printed) { %>
-                    <a href="/orders/action/<%= item._id%>?action=print" style="color: green;" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=sent-orders" style="color: green;" class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% }else{ %>
-                    <a href="/orders/action/<%= item._id%>?action=print" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=sent-orders" class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% } %>

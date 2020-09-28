@@ -1,8 +1,12 @@
+<a class="btn btn-primary mt-3 mb-2" href="/orders/add-order" role="button" style="width: 100%;">
+    <i class="fas fa-plus d-inline-block"></i>
+    <label class="d-inline-block mr-2">إضافة طلبية</label>
+</a>
+
 <hr class="mt-3">
 <div class="text-center mb-3" id="mainTitile">
     <h2>طلبيات قيد التنفيذ</h2>
 </div>
-
 <%- include('../../messages') %>
 
 <% if (data == false) { %>
@@ -34,7 +38,7 @@
                 <th scope="col">الاسم</th>
                 <th scope="col">المعرف</th>
                 <th scope="col">اسم السوشيل</th>
-                <th scope="col">طريقه الطلب</th>
+                <th scope="col">الصنف</th>
 
                 <th scope="col">السعر</th>
                 <th scope="col">يوم التسليم</th>
@@ -57,7 +61,11 @@
                 <td><%= item.userName%></td>
                 <td><%= item.orderNumb %></td>
                 <td><%= item.userSocial %></td>
-                <td><%= item.orderWay.title %></td>
+                <td>
+                    <% item.orderCase.forEach(item => { %>
+                    <span class="badge badge-warning"><%= item.productClass.title  %> </span>
+                    <% }) %>
+                </td>
 
                 <td><%= item.orderPrice %> شيكل</td>
                 <% const date = new Date(new Date(item.deleviryDate));%>
@@ -71,11 +79,11 @@
                         <i class="fas fa-pen"></i>
                     </a>
                     <% if (item.printed) { %>
-                    <a href="/orders/action/<%= item._id%>?action=print" style="color: green;" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=pending-orders" style="color: green;" class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% }else{ %>
-                    <a href="/orders/action/<%= item._id%>?action=print" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=pending-orders" class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% } %>

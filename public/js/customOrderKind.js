@@ -137,7 +137,7 @@ addDetailbtn.addEventListener('click', () => {
     $("#orderDetails").val('')
     finalTotal()
 
-    location.href = '#orderTable'
+    location.href = '#location'
 })
 let gIndex = 0
 let showUpdateTable = (e) => {

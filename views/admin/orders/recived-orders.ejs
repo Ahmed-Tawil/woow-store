@@ -53,12 +53,11 @@
 
             <% data.forEach((item , index) => { %>
             <tr class="">
-                <th scope="row"><%= index+1 %></th>
+                <th scope="row"><%= (page * limit) + index+1 %></th>
                 <td><%= item.userName%></td>
                 <td><%= item.orderNumb %></td>
                 <td><%= item.userSocial %></td>
                 <td><%= item.orderWay.title %></td>
-
                 <td><%= item.orderPrice %> شيكل</td>
                 <% const date = new Date(new Date(item.deleviryDate));%>
                 <td><%= days[date.getDay()] %></td>
@@ -68,11 +67,12 @@
                         <i class="fas fa-eye"></i>
                     </a>
                     <% if (item.printed) { %>
-                    <a href="/orders/action/<%= item._id%>?action=print" style="color: green;" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=recived-orders" style="color: green;"
+                        class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% }else{ %>
-                    <a href="/orders/action/<%= item._id%>?action=print" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=recived-orders" class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% } %>
@@ -102,6 +102,37 @@
 
         </tbody>
     </table>
+    <div class="row mx-auto my-4">
+
+        <div class="btn-toolbar mx-auto" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="col-md-10">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                    <% for( let index = 0; index < Math.ceil(documentsCount / limit) ; index++ ) { %>
+                    <% if (page == index) { %>
+                    <a href="/orders/recived-orders?page=<%= index %>" type="button" class="btn yellow activePage"><%= index + 1 %></a>
+                    <% } else { %>
+                    <a href="/orders/recived-orders?page=<%= index %>" type="button" class="btn yellow"><%= index + 1 %></a>
+                    <% } %>
+                    <% } %>
+
+                </div>
+            </div>
+        </div>
+        <style>
+            .yellow {
+                color: white !important;
+                background-color: #007bff;
+            }
+
+            .yellow:hover {
+                background-color: #cdcef8
+            }
+
+            .activePage {
+                background-color: #cdcef8
+            }
+        </style>
+    </div>
     <div class="text-center">
         <label class="col-form-label" for="inputDefault">نقل إلى</label>
         <select class="custom-select sel" id="movingStage" name="movingStage">
@@ -112,6 +143,7 @@
 
         </select>
     </div>
+
 
     <button class="btn btn-primary my-3" role="button" style="width: 100%;" type="submit" id="movingBtn">
         <i class="fas fa-people-carry d-inline-block" role="button"></i>

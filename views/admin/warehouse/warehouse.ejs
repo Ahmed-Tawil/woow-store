@@ -40,78 +40,88 @@
                 <th scope="col" style="width:15%;">أدوات</th>
             </tr>
         </thead>
+        <% function isInt(value) { %>
+
+        <%var er = /^-?[0-9]+$/;%>
+
+        <% return er.test(value);%>
+        <%}%>
+
         <tbody>
 
             <% data.forEach((item , index) => { %>
-            <% if (item.qty < 0) { %>
-            <tr style="background-color:#FFCCCC">
-                <th scope="row"><%= index+1 %></th>
-                <td><%= item.name%></td>
-                <th scope="row"><%= item.qty %></th>
-                <td><%= item.unitPrice%> شيكل</td>
-                <td style="padding: .75rem 0 .75rem 0;">
-                    <a id="<%= item._id%>" href="#" class="mx-1" role="button" data-toggle="modal" data-target="#editModal" onclick="plusItems(this)" >
-                        <i class="fas fa-plus d-inline-block"></i>
-                    </a>
+        <% if (item.qty < item.minQty) { %>
+        <tr style="background-color:#FFCCCC">
+            <th scope="row"><%= index+1 %></th>
+            <td><%= item.name%></td>
+            <th scope="row"><%= isInt(item.qty) ? item.qty : item.qty.toFixed(2) %></th>
+            <td><%= item.unitPrice%> شيكل</td>
+            <td style="padding: .75rem 0 .75rem 0;">
+                <a id="<%= item._id%>" href="#" class="mx-1" role="button" data-toggle="modal" data-target="#editModal"
+                    onclick="plusItems(this)">
+                    <i class="fas fa-plus d-inline-block"></i>
+                </a>
 
-                    <a href="/warehouse/action/<%= item._id%>?action=edit" class="mx-1">
-                        <i class="fas fa-pen"></i>
-                    </a>
-                    <% if (user.role != 'emp') { %>
-                    <a href="/warehouse/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
-                    <% } %>
+                <a href="/warehouse/action/<%= item._id%>?action=edit" class="mx-1">
+                    <i class="fas fa-pen"></i>
+                </a>
+                <% if (user.role != 'emp') { %>
+                <a href="/warehouse/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+                <% } %>
 
-                </td>
-            </tr>
-            <% } %>
-            <% if (item.qty > 0) { %>
-            <tr>
-                <th scope="row"><%= index+1 %></th>
-                <td><%= item.name%></td>
-                <th scope="row"><%= item.qty %></th>
-                <td><%= item.unitPrice%> شيكل</td>
-                <td style="padding: .75rem 0 .75rem 0;">
-                    <a id="<%= item._id%>" href="#" class="mx-1" role="button" data-toggle="modal" data-target="#editModal" onclick="plusItems(this)" >
-                        <i class="fas fa-plus d-inline-block"></i>
-                    </a>
+            </td>
+        </tr>
+        <% } %>
+        <% if (item.qty > item.minQty) { %>
+        <tr>
+            <th scope="row"><%= index+1 %></th>
+            <td><%= item.name%></td>
+            <th scope="row"><%= isInt(item.qty) ? item.qty : item.qty.toFixed(2) %></th>
+            <td><%= item.unitPrice%> شيكل</td>
+            <td style="padding: .75rem 0 .75rem 0;">
+                <a id="<%= item._id%>" href="#" class="mx-1" role="button" data-toggle="modal" data-target="#editModal"
+                    onclick="plusItems(this)">
+                    <i class="fas fa-plus d-inline-block"></i>
+                </a>
 
-                    <a href="/warehouse/action/<%= item._id%>?action=edit"  class="mx-1">
-                        <i class="fas fa-pen"></i>
-                    </a>
-                    <% if (user.role != 'emp') { %>
-                    <a href="/warehouse/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
-                    <% } %>
-                </td>
-            </tr>
-            <% } %>
-            <% if (item.qty == 0) { %>
-            <tr style="background-color:#fbeeac">
-                <th scope="row"><%= index+1 %></th>
-                <td><%= item.name%></td>
-                <th scope="row"><%= item.qty %></th>
-                <td><%= item.unitPrice%> شيكل</td>
-                <td style="padding: .75rem 0 .75rem 0;">
+                <a href="/warehouse/action/<%= item._id%>?action=edit" class="mx-1">
+                    <i class="fas fa-pen"></i>
+                </a>
+                <% if (user.role != 'emp') { %>
+                <a href="/warehouse/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+                <% } %>
+            </td>
+        </tr>
+        <% } %>
+        <% if (item.qty == item.minQty) { %>
+        <tr style="background-color:#fbeeac">
+            <th scope="row"><%= index+1 %></th>
+            <td><%= item.name%></td>
+            <th scope="row"><%= isInt(item.qty) ? item.qty : item.qty.toFixed(2) %></th>
+            <td><%= item.unitPrice%> شيكل</td>
+            <td style="padding: .75rem 0 .75rem 0;">
 
-                    <a id="<%= item._id%>" href="#" class="mx-1" role="button" data-toggle="modal" data-target="#editModal" onclick="plusItems(this)" >
-                        <i class="fas fa-plus d-inline-block"></i>
-                    </a>
-                    <a href="/warehouse/action/<%= item._id%>?action=edit" class="mx-1">
-                        <i class="fas fa-pen"></i>
-                    </a>
-                    <% if (user.role != 'emp') { %>
-                    <a href="/warehouse/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
-                    <% } %>
-                </td>
-            </tr>
-            <% } %>
+                <a id="<%= item._id%>" href="#" class="mx-1" role="button" data-toggle="modal" data-target="#editModal"
+                    onclick="plusItems(this)">
+                    <i class="fas fa-plus d-inline-block"></i>
+                </a>
+                <a href="/warehouse/action/<%= item._id%>?action=edit" class="mx-1">
+                    <i class="fas fa-pen"></i>
+                </a>
+                <% if (user.role != 'emp') { %>
+                <a href="/warehouse/action/<%= item._id%>?action=delete" class="mx-1 confirmDeletion">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+                <% } %>
+            </td>
+        </tr>
+        <% } %>
 
-            <% }) %>
+        <% }) %>
 
         </tbody>
     </table>
@@ -119,8 +129,8 @@
 
 
 
-        <!-- Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!-- Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -135,12 +145,11 @@
                     <form action="" id="editForm" method="POST">
                         <div class="form-group">
                             <label class="col-form-label" for="inputDefault">الكمية :</label>
-                            <div class="form-group"> 
+                            <div class="form-group">
                                 <div class="input-group mb-2">
 
-                                    <input type="number" class="form-control"
-                                         min="0" value="0" step="any"
-                                        name="qty" id="plusItemInput" >
+                                    <input type="number" class="form-control" min="0" value="0" step="any" name="qty"
+                                        id="plusItemInput">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">عنصر</span>
                                     </div>
@@ -150,8 +159,9 @@
 
                 </div>
                 <div class="modal-footer" style="font-family: 'Cairo', sans-serif;">
-                    <button type="button" style="font-family:inherit;" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
-                    <button class="btn btn-primary" style="font-family:inherit;"  type="submit">إضافة</button>
+                    <button type="button" style="font-family:inherit;" class="btn btn-secondary"
+                        data-dismiss="modal">إغلاق</button>
+                    <button class="btn btn-primary" style="font-family:inherit;" type="submit">إضافة</button>
                 </div>
                 </form>
 
@@ -163,7 +173,7 @@
 </div>
 <link rel="stylesheet" href="/css/form.css">
 <script>
-    const plusItems = (e)=>{
+    const plusItems = (e) => {
         const itemId = e.id
         $('form').attr('action', `/warehouse/plus-item?id=${itemId}`)
     }

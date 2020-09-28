@@ -47,11 +47,12 @@ router.get('/', (req, res) => {
 });
 
 router.post('/add-item', (req, res) => {
-    const { itemNameInput, itemQty, unitPrice } = req.body
+    const { itemNameInput, itemQty, itemMinQty , unitPrice } = req.body
     const newItem = new Warehouse({
         name: itemNameInput,
         unitPrice: unitPrice,
-        qty: itemQty
+        qty: itemQty,
+        minQty:itemMinQty
     })
     newItem.save(() => {
         req.flash('success_msg', 'تم الإضافة بنجاح.')
@@ -61,11 +62,12 @@ router.post('/add-item', (req, res) => {
 });
 router.post('/edit-item/:id', (req, res) => {
     const id = req.params.id
-    const { itemNameInput, itemQty, unitPrice } = req.body
+    const { itemNameInput, itemQty, itemMinQty, unitPrice } = req.body
     Warehouse.updateOne({_id:id} , {
         name: itemNameInput,
         unitPrice: unitPrice,
-        qty: itemQty
+        qty: itemQty,
+        minQty:itemMinQty
     }).then(()=>{
         req.flash('success_msg', 'تم التعديل بنجاح.')
         res.redirect('/warehouse')

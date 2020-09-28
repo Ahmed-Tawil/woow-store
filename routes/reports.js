@@ -185,7 +185,7 @@ router.get('/sales', async (req, res) => {
           totalEmpTasks = totalEmpTasks + parseFloat(elem.productKind.id.productTask.basic)
             + parseFloat(elem.productKind.id.productTask.helper) + empTask.wraperTask + empTask.recivedTaskOnProduct
         })
-        singleProductSchema.productCost = totalConsumptionElements;
+        singleProductSchema.productCost = totalConsumptionElements * singleProductSchema.productCount;
         singleProductSchema.productEmpTasks = totalEmpTasks;
         singleProductClassSchema.products.push(singleProductSchema)
 

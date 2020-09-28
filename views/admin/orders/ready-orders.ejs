@@ -38,6 +38,7 @@
 
                 <th scope="col">السعر</th>
                 <th scope="col">يوم التسليم</th>
+                <th scope="col">شركة التوصيل</th>
                 <th role="button" scope="col"> <a href="/orders/ready-orders?order=date"
                         style="text-decoration: none; color: black;">موعد التسليم</a></th>
                 <th scope="col" style="width:15%;">أدوات</th>
@@ -62,17 +63,18 @@
                 <td><%= item.orderPrice %> شيكل</td>
                 <% const date = new Date(new Date(item.deleviryDate));%>
                 <td><%= days[date.getDay()] %></td>
+                <td><%= item.deliveryCompany.name %></td>
                 <td><%= item.deleviryDate %></td>
                 <td style="padding: .75rem 0 .75rem 0;">
                     <a href="/orders/action/<%= item._id%>?action=display" class="mx-1">
                         <i class="fas fa-eye"></i>
                     </a>
                     <% if (item.printed) { %>
-                    <a href="/orders/action/<%= item._id%>?action=print" style="color: green;" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=ready-orders" style="color: green;" class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% }else{ %>
-                    <a href="/orders/action/<%= item._id%>?action=print" class="mx-1">
+                    <a href="/orders/action/<%= item._id%>?action=print&location=ready-orders" class="mx-1">
                         <i class="fas fa-print"></i>
                     </a>
                     <% } %>
@@ -95,7 +97,7 @@
             </tr>
             <% }) %>
             <tr style="width: 100%;">
-                <td colspan="10" id="selectedNumber" style="padding: 3px;">
+                <td colspan="11" id="selectedNumber" style="padding: 3px;">
                     <label style="padding: 3px;"></label>
                 </td>
             </tr>
@@ -106,7 +108,7 @@
         <label class="col-form-label" for="inputDefault">نقل إلى</label>
         <select class="custom-select sel" id="movingStage" name="movingStage">
             <option selected value="pending">قيد التنفيذ</option>
-            <option value="sent">مرسل</option>
+            <option selected value="sent">مرسل</option>
             <option value="recived">مستلم</option>
         </select>
     </div>
